@@ -19,23 +19,18 @@
 			top: 0;
 			left: 0;
 			z-index: 1;
-			margin-left: 15px;
-			margin-top: 15px;
-			padding: 1em;
-			width: 200px;
 			color: #fff;
-			background: rgba(0, 0, 0, 0.8);
-			border-radius: .5em;
-			font-size: 12px;
-			line-height: 1.2;
-			transition: opacity .5s;
 		}
 
-		.annotation ::before {
-			content: '1';
+		#number {
 			position: absolute;
-			top: -30px;
-			left: -30px;
+			z-index: -1;
+		}
+
+		.num{
+			position: absolute;
+			top: -15px;
+			left: -15px;
 			width: 30px;
 			height: 30px;
 			border: 2px solid #fff;
@@ -46,19 +41,40 @@
 			background: rgba(0, 0, 0, 0.8);
 		}
 
-		#number {
-			position: absolute;
-			z-index: -1;
+		.num:hover + .content{
+			/* background-color: blueviolet; */
+			display: block;
+		}
+
+		.content{
+			margin-left: 15px;
+			margin-top: 15px;
+			padding: 1em;
+
+			background: rgba(0, 0, 0, 0.8);
+			border-radius: .5em;
+			font-size: 12px;
+			line-height: 1.2;
+			transition: opacity .5s;
+
+			width: 150px;
+			display: none;
 		}
 	</style>
 </head>
 
 <body>
+
+
 	<div class="annotation">
-		<p><strong>Cube</strong></p>
-		<p>In geometry, a cube is a three-dimensional solid object bounded by six square faces, facets or sides, with
-			three meeting at each vertex.</p>
+		<div class="num">1</div>
+		<div class="content">
+			<p><strong>곰 귀</strong></p>
+			<p>이것은 곰탱이의 귀 입니다</p>
+		</div>
 	</div>
+	
+
 	<canvas id="number" width="64" height="64"></canvas>
 
 	<script type="module" defer>
@@ -85,7 +101,7 @@
 		const cube = new THREE.Mesh(geometry, material);
 		cube.castShadow = true;
 		cube.position.y = 1;
-		scene.add(cube);
+		// scene.add(cube);
 
 		let planeGeomtry = new THREE.PlaneGeometry(20, 20, 1, 1);
 		let planeMaterial = new THREE.MeshStandardMaterial({ color: 0xCCCCCC });
@@ -109,7 +125,7 @@
 			root.scale.set(0.1, 0.1, 0.1);
 			root.position.y = 3;
 
-			// scene.add(root);
+			scene.add(root);
 		}, () => { }, (e) => { console.log(e) });
 
 		function setShadowCamera() {
@@ -180,7 +196,7 @@
 		scene.add(sprite);
 
 		function updateAnnotationOpacity() {
-			// const meshDistance = camera.position.distanceTo(mesh.position);
+			// const meshDistance = camera.position.distanceTo(root.position);
 			const spriteDistance = camera.position.distanceTo(sprite.position);
 			// spriteBehindObject = spriteDistance > meshDistance;
 			// sprite.material.opacity = spriteBehindObject ? 0.25 : 1;
@@ -189,7 +205,7 @@
 		}
 
 		function updateScreenPosition() {
-			const vector = new THREE.Vector3(0.5,0.5,0.5);
+			const vector = new THREE.Vector3(0.55,5,0);
 			const canvas = renderer.domElement;
 
 			vector.project(camera);
@@ -201,16 +217,14 @@
 			annotation.style.left = `${vector.x}px`;
 			// annotation.style.opacity = spriteBehindObject ? 0.25 : 1;
 		}
-		updateScreenPosition();
-		updateAnnotationOpacity();
+		// updateScreenPosition();
+		// updateAnnotationOpacity();
 		// 
-
-		// 여기서부터
 
 		function animate() {
 			requestAnimationFrame(animate);
 			controls.update();
-
+			updateScreenPosition();
 			renderer.render(scene, camera);
 		};
 
